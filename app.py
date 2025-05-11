@@ -153,7 +153,8 @@ def render_question_list():
     for index, question in enumerate(st.session_state.filtered_questions):
         question_number = index + 1
         question_number_key = f"question-{question_number}"
-        st.radio(question['title'], question["choices"], index=None, key=question_number_key)
+        question_title = f"{question_number}.{question['title']}"
+        st.radio(question_title, question["choices"], index=None, key=question_number_key)
 
 def calculate_scores():
     scores = {
