@@ -1,6 +1,7 @@
 import streamlit as st
 import random
 
+# region Variables
 questions = [
     {
         "title": "When learning something new, you prefer to:",
@@ -124,6 +125,10 @@ questions = [
     }
 ]
 
+question_options = [3, 6, 9, 12, 15]
+# endregion
+
+# region Methods
 def render_result(message, description, image_link, popup_type = "Success"):
     if popup_type == "Success":
         st.success(message)
@@ -141,9 +146,35 @@ def initialize_state():
     st.session_state.quiz_started = False
     st.session_state.filtered_questions = []
 
-# Content
-question_options = [3, 6, 9, 12, 15]
+def render_question_list():
+    for index, question in enumerate(st.session_state.filtered_questions):
+        question_number = index + 1
+        question_number_key = f"question-{question_number}"
+        st.radio(question['title'], question["choices"], index=None, key=question_number_key)
 
+def calculate_scores():
+    scores = {
+        "Visual": 0,
+        "Audio": 0,
+        "Kinesthetic": 0
+    }
+
+    unanswered_questions = []
+
+    for index, question in enumerate(st.session_state.filtered_questions):
+        question_number = index + 1
+        question_number_key = f"question-{question_number}"
+        selected_text = st.session_state.get(question_number_key)
+        if selected_text:
+            selected_value = question["choices"][selected_text]
+            scores[selected_value] += 1
+        else:
+            unanswered_questions.append(question_number)
+    
+    return scores, unanswered_questions
+# endregion
+
+# region Content
 st.header("📚 Learning Style Test")
 selected_options = st.selectbox("Please select how many questions to display", question_options, on_change=on_option_change)
 
@@ -155,44 +186,22 @@ if st.button("Start Quiz"):
     st.session_state.filtered_questions = random.sample(questions, selected_options)
 
 if st.session_state.quiz_started:
-    for index, question in enumerate(st.session_state.filtered_questions):
-        question_number = index + 1
-        question_number_key = f"question-{question_number}"
-        st.radio(question['title'], question["choices"], index=None, key=question_number_key)
+    render_question_list()
 
     if st.button("Calculate Results"):
-        scores = {
-            "Visual": 0,
-            "Audio": 0,
-            "Kinesthetic": 0
-        }
-        unanswered_questions = []
-
-        for index, question in enumerate(st.session_state.filtered_questions):
-            question_number = index + 1
-            question_number_key = f"question-{question_number}"
-            selected_text = st.session_state.get(question_number_key)
-            if selected_text:
-                selected_value = question["choices"][selected_text]
-                scores[selected_value] += 1
-            else:
-                unanswered_questions.append(question_number)
-
+        scores, unanswered_questions = calculate_scores()
         message = ""
         description = ""
         image_link = ""
+        popup_type = ""
+        is_all_questions_answered = len(unanswered_questions) == 0
 
-        if len(unanswered_questions) > 0:
-            message = f"You haven't answered question number: {f"{", ".join(str(item) for item in unanswered_questions)}"}"
-            description = "In this application, you need to fill all of the questions to be able to proceed."
-            image_link = "assets/dont-do-this.gif"
-            render_result(message, description, image_link, popup_type="Error")
-        else:
+        if is_all_questions_answered:
             if scores["Visual"] == scores["Audio"] == scores["Kinesthetic"]:
                 message = "⚠️ There is no suitable learning style, please try again"
                 description = "In this application, we cannot use the same values for Visual, Audio and Kinesthetic learning style, must have the highest value in one learning style."
                 image_link = "assets/try-again.gif"
-                render_result(message, description, image_link, popup_type="Warning")
+                popup_type = "Warning"
             else:
                 learning_style = max(scores, key=scores.get)
 
@@ -208,10 +217,19 @@ if st.session_state.quiz_started:
                     message = "🙌 Congratulations, you are a KINESTHETIC learner"
                     description = "**Kinesthetic learners** learn best by doing. They prefer hands-on experiences, movement, and physical engagement with materials. They remember information through action, experiments, and real-world practice rather than passive observation or listening."
                     image_link = "assets/kinesthetic.gif"
+                
+                popup_type = "Success"
+        else:
+            message = f"You haven't answered question number: {f"{", ".join(str(item) for item in unanswered_questions)}"}"
+            description = "In this application, you need to fill all of the questions to be able to proceed."
+            image_link = "assets/dont-do-this.gif"
+            popup_type = "Error"
 
-                render_result(message, description, image_link)
+        render_result(message, description, image_link, popup_type)
 
-                with st.expander("🔍 See Detailed Scores"):
-                    st.markdown(f"Your visual learning score is : **{scores["Visual"]}**")
-                    st.markdown(f"Your auditory learning score is : **{scores["Audio"]}**")
-                    st.markdown(f"Your kinesthetic learning score is : **{scores["Kinesthetic"]}**")
+        if is_all_questions_answered:
+            with st.expander("🔍 See Detailed Scores"):
+                st.markdown(f"Your visual learning score is : **{scores["Visual"]}**")
+                st.markdown(f"Your auditory learning score is : **{scores["Audio"]}**")
+                st.markdown(f"Your kinesthetic learning score is : **{scores["Kinesthetic"]}**") 
+# endregion
