@@ -185,11 +185,12 @@ def show_result_dialog():
     image_link = ""
     popup_type = ""
     is_all_questions_answered = len(unanswered_questions) == 0
+    is_equal_scores = scores["Visual"] == scores["Audio"] == scores["Kinesthetic"]
     # endregion
 
     # region Render Results Component
     if is_all_questions_answered:
-        if scores["Visual"] == scores["Audio"] == scores["Kinesthetic"]:
+        if is_equal_scores:
             message = "⚠️ There is no suitable learning style, please try again"
             description = "This application requires one learning style to have the highest score. If Visual, Audio, and Kinesthetic scores are all equal, we cannot determine a dominant learning preference. Please try again and answer more reflectively."
             image_link = "assets/try-again.gif"
@@ -221,7 +222,7 @@ def show_result_dialog():
     #endregion
 
     # region Detailed Scores
-    if is_all_questions_answered:
+    if is_all_questions_answered and not(is_equal_scores):
         with st.expander("🔍 See Detailed Scores"):
             st.markdown(f"Your visual learning score is : **{scores["Visual"]}**")
             st.markdown(f"Your auditory learning score is : **{scores["Audio"]}**")
