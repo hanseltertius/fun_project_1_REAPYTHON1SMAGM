@@ -44,8 +44,7 @@ for index, question in enumerate(questions):
     # index=None is to use the placeholder value
     question_number = index + 1
     question_number_key = f"question-{question_number}"
-    question_title = f"{question_number}. {question["title"]}"
-    st.radio(question_title, question["choices"], key=question_number_key)
+    st.radio(question['title'], question["choices"], key=question_number_key)
 
 if st.button("Calculate Results"):
     scores = {
@@ -88,3 +87,8 @@ if st.button("Calculate Results"):
             image_link = "assets/kinesthetic.gif"
 
         render_result(message, description, image_link)
+
+        with st.expander("🔍 See Detailed Scores"):
+            st.markdown(f"Your visual learning score is : **{scores["Visual"]}**")
+            st.markdown(f"Your auditory learning score is : **{scores["Audio"]}**")
+            st.markdown(f"Your kinesthetic learning score is : **{scores["Kinestetik"]}**")
