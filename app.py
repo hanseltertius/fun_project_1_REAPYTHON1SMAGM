@@ -140,11 +140,14 @@ def render_result(message, description, image_link, popup_type):
     st.image(image_link, use_container_width=True)
 
 def on_option_change():
-    initialize_state()
+    initialize_quiz_state()
 
-def initialize_state():
+def initialize_quiz_state():
     st.session_state.quiz_started = False
     st.session_state.filtered_questions = []
+
+def initialize_dialog_state():
+    st.session_state.open_dialog = False
 
 def render_question_list():
     for index, question in enumerate(st.session_state.filtered_questions):
@@ -172,6 +175,58 @@ def calculate_scores():
             unanswered_questions.append(question_number)
     
     return scores, unanswered_questions
+
+@st.dialog("Result Summary")
+def show_result_dialog():
+    # region Variable in Results
+    scores, unanswered_questions = calculate_scores()
+    message = ""
+    description = ""
+    image_link = ""
+    popup_type = ""
+    is_all_questions_answered = len(unanswered_questions) == 0
+    # endregion
+
+    # region Render Results Component
+    if is_all_questions_answered:
+        if scores["Visual"] == scores["Audio"] == scores["Kinesthetic"]:
+            message = "⚠️ There is no suitable learning style, please try again"
+            description = "This application requires one learning style to have the highest score. If Visual, Audio, and Kinesthetic scores are all equal, we cannot determine a dominant learning preference. Please try again and answer more reflectively."
+            image_link = "assets/try-again.gif"
+            popup_type = "Warning"
+        else:
+            learning_style = max(scores, key=scores.get)
+
+            if learning_style == "Visual":
+                message = "👀 Congratulations, you are a VISUAL learner"
+                description = "**Visual learners** understand best through seeing. They prefer images, diagrams, charts, and written instructions. They retain information more effectively when it's presented visually and often benefit from color-coded notes or mind maps."
+                image_link = "assets/visual.gif"
+            elif learning_style == "Audio":
+                message = "👂 Congratulations, you are a AUDITORY learner"
+                description = "**Auditory learners** grasp concepts better through listening. They enjoy discussions, lectures, and audio materials, and they often remember information by hearing it or repeating it aloud. Sound and rhythm play a key role in how they process knowledge."
+                image_link = "assets/auditory.gif"
+            else:
+                message = "🙌 Congratulations, you are a KINESTHETIC learner"
+                description = "**Kinesthetic learners** learn best by doing. They prefer hands-on experiences, movement, and physical engagement with materials. They remember information through action, experiments, and real-world practice rather than passive observation or listening."
+                image_link = "assets/kinesthetic.gif"
+            
+            popup_type = "Success"
+    else:
+        message = f"You haven't answered question number: {', '.join(str(item) for item in unanswered_questions)}"
+        description = "Please answer all the questions before submitting. This application requires all responses to determine your learning style accurately."
+        image_link = "assets/dont-do-this.gif"
+        popup_type = "Error"
+
+    render_result(message, description, image_link, popup_type)
+    #endregion
+
+    # region Detailed Scores
+    if is_all_questions_answered:
+        with st.expander("🔍 See Detailed Scores"):
+            st.markdown(f"Your visual learning score is : **{scores["Visual"]}**")
+            st.markdown(f"Your auditory learning score is : **{scores["Audio"]}**")
+            st.markdown(f"Your kinesthetic learning score is : **{scores["Kinesthetic"]}**") 
+    #endregion
 # endregion
 
 # region Content
@@ -179,7 +234,10 @@ st.header("📚 Learning Style Test")
 selected_options = st.selectbox("Please select how many questions to display", question_options, on_change=on_option_change)
 
 if "quiz_started" not in st.session_state:
-    initialize_state()
+    initialize_quiz_state()
+
+if "open_result_dialog" not in st.session_state:
+    initialize_dialog_state()
 
 if st.button("Start Quiz"):
     st.session_state.quiz_started = True
@@ -189,53 +247,8 @@ if st.session_state.quiz_started:
     render_question_list()
 
     if st.button("Calculate Results"):
-        # region Variable in Results
-        scores, unanswered_questions = calculate_scores()
-        message = ""
-        description = ""
-        image_link = ""
-        popup_type = ""
-        is_all_questions_answered = len(unanswered_questions) == 0
-        # endregion
+        st.session_state.open_dialog = True
 
-        # region Render Results Component
-        if is_all_questions_answered:
-            if scores["Visual"] == scores["Audio"] == scores["Kinesthetic"]:
-                message = "⚠️ There is no suitable learning style, please try again"
-                description = "This application requires one learning style to have the highest score. If Visual, Audio, and Kinesthetic scores are all equal, we cannot determine a dominant learning preference. Please try again and answer more reflectively."
-                image_link = "assets/try-again.gif"
-                popup_type = "Warning"
-            else:
-                learning_style = max(scores, key=scores.get)
-
-                if learning_style == "Visual":
-                    message = "👀 Congratulations, you are a VISUAL learner"
-                    description = "**Visual learners** understand best through seeing. They prefer images, diagrams, charts, and written instructions. They retain information more effectively when it's presented visually and often benefit from color-coded notes or mind maps."
-                    image_link = "assets/visual.gif"
-                elif learning_style == "Audio":
-                    message = "👂 Congratulations, you are a AUDITORY learner"
-                    description = "**Auditory learners** grasp concepts better through listening. They enjoy discussions, lectures, and audio materials, and they often remember information by hearing it or repeating it aloud. Sound and rhythm play a key role in how they process knowledge."
-                    image_link = "assets/auditory.gif"
-                else:
-                    message = "🙌 Congratulations, you are a KINESTHETIC learner"
-                    description = "**Kinesthetic learners** learn best by doing. They prefer hands-on experiences, movement, and physical engagement with materials. They remember information through action, experiments, and real-world practice rather than passive observation or listening."
-                    image_link = "assets/kinesthetic.gif"
-                
-                popup_type = "Success"
-        else:
-            message = f"You haven't answered question number: {', '.join(str(item) for item in unanswered_questions)}"
-            description = "Please answer all the questions before submitting. This application requires all responses to determine your learning style accurately."
-            image_link = "assets/dont-do-this.gif"
-            popup_type = "Error"
-
-        render_result(message, description, image_link, popup_type)
-        #endregion
-
-        # region Detailed Scores
-        if is_all_questions_answered:
-            with st.expander("🔍 See Detailed Scores"):
-                st.markdown(f"Your visual learning score is : **{scores["Visual"]}**")
-                st.markdown(f"Your auditory learning score is : **{scores["Audio"]}**")
-                st.markdown(f"Your kinesthetic learning score is : **{scores["Kinesthetic"]}**") 
-        #endregion
+    if st.session_state.open_dialog:
+        show_result_dialog()
 # endregion
