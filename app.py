@@ -41,10 +41,9 @@ def render_result(message, description, image_link, popup_type = "Success"):
 st.header("📚 Learning Style Test")
 
 for index, question in enumerate(questions):
-    # index=None is to use the placeholder value
     question_number = index + 1
     question_number_key = f"question-{question_number}"
-    st.radio(question['title'], question["choices"], key=question_number_key)
+    st.radio(question['title'], question["choices"], index=None, key=question_number_key)
 
 if st.button("Calculate Results"):
     scores = {
@@ -52,6 +51,7 @@ if st.button("Calculate Results"):
         "Audio": 0,
         "Kinestetik": 0
     }
+    unanswered_questions = []
 
     for index, question in enumerate(questions):
         question_number = index + 1
@@ -60,35 +60,43 @@ if st.button("Calculate Results"):
         if selected_text:
             selected_value = question["choices"][selected_text]
             scores[selected_value] += 1
+        else:
+            unanswered_questions.append(question_number)
 
     message = ""
     description = ""
     image_link = ""
-    
-    if scores["Visual"] == scores["Audio"] == scores["Kinestetik"]:
-        message = "⚠️ There is no suitable learning style, please try again"
-        description = "In this application, we cannot use the same values for Visual, Audio and Kinesthetic learning style, must have the highest value in one learning style."
-        image_link = "assets/try-again.gif"
-        render_result(message, description, image_link, popup_type="Warning")
+
+    if len(unanswered_questions) > 0:
+        message = f"You haven't answered question number: {f"{", ".join(str(item) for item in unanswered_questions)}"}"
+        description = "In this application, you need to fill all of the questions to be able to proceed."
+        image_link = "assets/dont-do-this.gif"
+        render_result(message, description, image_link, popup_type="Error")
     else:
-        learning_style = max(scores, key=scores.get)
-
-        if learning_style == "Visual":
-            message = "👀 Congratulations, you are a VISUAL learner"
-            description = "**Visual learners** understand best through seeing. They prefer images, diagrams, charts, and written instructions. They retain information more effectively when it's presented visually and often benefit from color-coded notes or mind maps."
-            image_link = "assets/visual.gif"
-        elif learning_style == "Audio":
-            message = "👂 Congratulations, you are a AUDITORY learner"
-            description = "**Auditory learners** grasp concepts better through listening. They enjoy discussions, lectures, and audio materials, and they often remember information by hearing it or repeating it aloud. Sound and rhythm play a key role in how they process knowledge."
-            image_link = "assets/auditory.gif"
+        if scores["Visual"] == scores["Audio"] == scores["Kinestetik"]:
+            message = "⚠️ There is no suitable learning style, please try again"
+            description = "In this application, we cannot use the same values for Visual, Audio and Kinesthetic learning style, must have the highest value in one learning style."
+            image_link = "assets/try-again.gif"
+            render_result(message, description, image_link, popup_type="Warning")
         else:
-            message = "🙌 Congratulations, you are a KINESTHETIC learner"
-            description = "**Kinesthetic learners** learn best by doing. They prefer hands-on experiences, movement, and physical engagement with materials. They remember information through action, experiments, and real-world practice rather than passive observation or listening."
-            image_link = "assets/kinesthetic.gif"
+            learning_style = max(scores, key=scores.get)
 
-        render_result(message, description, image_link)
+            if learning_style == "Visual":
+                message = "👀 Congratulations, you are a VISUAL learner"
+                description = "**Visual learners** understand best through seeing. They prefer images, diagrams, charts, and written instructions. They retain information more effectively when it's presented visually and often benefit from color-coded notes or mind maps."
+                image_link = "assets/visual.gif"
+            elif learning_style == "Audio":
+                message = "👂 Congratulations, you are a AUDITORY learner"
+                description = "**Auditory learners** grasp concepts better through listening. They enjoy discussions, lectures, and audio materials, and they often remember information by hearing it or repeating it aloud. Sound and rhythm play a key role in how they process knowledge."
+                image_link = "assets/auditory.gif"
+            else:
+                message = "🙌 Congratulations, you are a KINESTHETIC learner"
+                description = "**Kinesthetic learners** learn best by doing. They prefer hands-on experiences, movement, and physical engagement with materials. They remember information through action, experiments, and real-world practice rather than passive observation or listening."
+                image_link = "assets/kinesthetic.gif"
 
-        with st.expander("🔍 See Detailed Scores"):
-            st.markdown(f"Your visual learning score is : **{scores["Visual"]}**")
-            st.markdown(f"Your auditory learning score is : **{scores["Audio"]}**")
-            st.markdown(f"Your kinesthetic learning score is : **{scores["Kinestetik"]}**")
+            render_result(message, description, image_link)
+
+            with st.expander("🔍 See Detailed Scores"):
+                st.markdown(f"Your visual learning score is : **{scores["Visual"]}**")
+                st.markdown(f"Your auditory learning score is : **{scores["Audio"]}**")
+                st.markdown(f"Your kinesthetic learning score is : **{scores["Kinestetik"]}**")
