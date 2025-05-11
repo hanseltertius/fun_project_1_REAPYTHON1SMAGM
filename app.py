@@ -129,7 +129,7 @@ question_options = [3, 6, 9, 12, 15]
 # endregion
 
 # region Methods
-def render_result(message, description, image_link, popup_type = "Success"):
+def render_result(message, description, image_link, popup_type):
     if popup_type == "Success":
         st.success(message)
     elif popup_type == "Warning":
@@ -189,17 +189,20 @@ if st.session_state.quiz_started:
     render_question_list()
 
     if st.button("Calculate Results"):
+        # region Variable in Results
         scores, unanswered_questions = calculate_scores()
         message = ""
         description = ""
         image_link = ""
         popup_type = ""
         is_all_questions_answered = len(unanswered_questions) == 0
+        # endregion
 
+        # region Render Results Component
         if is_all_questions_answered:
             if scores["Visual"] == scores["Audio"] == scores["Kinesthetic"]:
                 message = "⚠️ There is no suitable learning style, please try again"
-                description = "In this application, we cannot use the same values for Visual, Audio and Kinesthetic learning style, must have the highest value in one learning style."
+                description = "This application requires one learning style to have the highest score. If Visual, Audio, and Kinesthetic scores are all equal, we cannot determine a dominant learning preference. Please try again and answer more reflectively."
                 image_link = "assets/try-again.gif"
                 popup_type = "Warning"
             else:
@@ -220,16 +223,19 @@ if st.session_state.quiz_started:
                 
                 popup_type = "Success"
         else:
-            message = f"You haven't answered question number: {f"{", ".join(str(item) for item in unanswered_questions)}"}"
-            description = "In this application, you need to fill all of the questions to be able to proceed."
+            message = f"You haven't answered question number: {', '.join(str(item) for item in unanswered_questions)}"
+            description = "Please answer all the questions before submitting. This application requires all responses to determine your learning style accurately."
             image_link = "assets/dont-do-this.gif"
             popup_type = "Error"
 
         render_result(message, description, image_link, popup_type)
+        #endregion
 
+        # region Detailed Scores
         if is_all_questions_answered:
             with st.expander("🔍 See Detailed Scores"):
                 st.markdown(f"Your visual learning score is : **{scores["Visual"]}**")
                 st.markdown(f"Your auditory learning score is : **{scores["Audio"]}**")
                 st.markdown(f"Your kinesthetic learning score is : **{scores["Kinesthetic"]}**") 
+        #endregion
 # endregion
