@@ -250,6 +250,6 @@ if st.session_state.quiz_started:
     if st.button("Calculate Results"):
         st.session_state.open_dialog = True
 
-    if st.session_state.open_dialog:
-        show_result_dialog()
+if st.session_state.open_dialog:
+    show_result_dialog()
 # endregion
