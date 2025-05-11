@@ -27,6 +27,10 @@ questions = [
     }
 ]
 
+def render_result(message, description):
+    st.success(message)
+    st.markdown(description)
+
 # Content
 st.header("📚 Learning Style Test")
 
@@ -37,7 +41,6 @@ for index, question in enumerate(questions):
     question_title = f"{question_number}. {question["title"]}"
     st.radio(question_title, question["choices"], key=question_number_key)
 
-# TODO : create a button to calculate the results
 if st.button("Calculate Results"):
     scores = {
         "Visual": 0,
@@ -53,6 +56,22 @@ if st.button("Calculate Results"):
             selected_value = question["choices"][selected_text]
             scores[selected_value] += 1
     
-    learning_style = max(scores, key=scores.get)
+    if scores["Visual"] == scores["Audio"] == scores["Kinestetik"]:
+        st.warning("⚠️ There is no suitable learning style, please try again")
+    else:
+        learning_style = max(scores, key=scores.get)
 
-    st.write("Learning style :", learning_style)
+        message = ""
+        description = ""
+
+        if learning_style == "Visual":
+            message = "👀 Congratulations, you are a VISUAL learner"
+            description = "**Visual learners** understand best through seeing. They prefer images, diagrams, charts, and written instructions. They retain information more effectively when it's presented visually and often benefit from color-coded notes or mind maps."
+        elif learning_style == "Audio":
+            message = "👂 Congratulations, you are a AUDITORY learner"
+            description = "**Auditory learners** grasp concepts better through listening. They enjoy discussions, lectures, and audio materials, and they often remember information by hearing it or repeating it aloud. Sound and rhythm play a key role in how they process knowledge."
+        else:
+            message = "🙌 Congratulations, you are a KINESTHETIC learner"
+            description = "**Kinesthetic learners** learn best by doing. They prefer hands-on experiences, movement, and physical engagement with materials. They remember information through action, experiments, and real-world practice rather than passive observation or listening."
+
+        render_result(message, description)
