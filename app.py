@@ -7,7 +7,7 @@ questions = [
         "title": "When learning something new, you prefer to:",
         "choices": {
             "Look at diagrams, colors, and images": "Visual",
-            "Listen to explanations or audiobooks": "Audio",
+            "Listen to explanations or audiobooks": "Auditory",
             "Try it out and practice directly": "Kinesthetic"
         }
     },
@@ -15,7 +15,7 @@ questions = [
         "title": "When you need to remember something, you find it easier to recall by:",
         "choices": {
             "Imagining images or concept maps": "Visual",
-            "Repeating it aloud or through discussions": "Audio",
+            "Repeating it aloud or through discussions": "Auditory",
             "Doing it or rewriting the material": "Kinesthetic"
         }
     },
@@ -23,7 +23,7 @@ questions = [
         "title": "What type of learning material do you enjoy the most:",
         "choices": {
             "Videos with animations or illustrations": "Visual",
-            "Podcasts or verbal explanations": "Audio",
+            "Podcasts or verbal explanations": "Auditory",
             "Workshops or hands-on simulations": "Kinesthetic"
         }
     },
@@ -31,7 +31,7 @@ questions = [
         "title": "Which activity sounds most appealing during a class?",
         "choices": {
             "Watching a demonstration or visual slides": "Visual",
-            "Listening to a lecture or group discussion": "Audio",
+            "Listening to a lecture or group discussion": "Auditory",
             "Engaging in an experiment or role-play": "Kinesthetic"
         }
     },
@@ -39,7 +39,7 @@ questions = [
         "title": "What do you usually do when trying to understand a new idea?",
         "choices": {
             "Draw it or visualize it in your mind": "Visual",
-            "Talk it through with someone": "Audio",
+            "Talk it through with someone": "Auditory",
             "Act it out or build a model": "Kinesthetic"
         }
     },
@@ -47,7 +47,7 @@ questions = [
         "title": "Your note-taking style is usually:",
         "choices": {
             "Color-coded with diagrams or charts": "Visual",
-            "Writing down what the teacher says word-for-word": "Audio",
+            "Writing down what the teacher says word-for-word": "Auditory",
             "Minimal notes, preferring to recall from doing": "Kinesthetic"
         }
     },
@@ -55,7 +55,7 @@ questions = [
         "title": "How do you usually solve a problem?",
         "choices": {
             "Sketch out or map the situation": "Visual",
-            "Talk through it step by step": "Audio",
+            "Talk through it step by step": "Auditory",
             "Tinker and try different things": "Kinesthetic"
         }
     },
@@ -63,7 +63,7 @@ questions = [
         "title": "When giving directions, you tend to:",
         "choices": {
             "Draw a map or show landmarks": "Visual",
-            "Explain verbally with street names": "Audio",
+            "Explain verbally with street names": "Auditory",
             "Physically point or gesture directions": "Kinesthetic"
         }
     },
@@ -71,7 +71,7 @@ questions = [
         "title": "In group projects, you are the one who usually:",
         "choices": {
             "Creates slides or visual materials": "Visual",
-            "Leads the discussion or presents ideas": "Audio",
+            "Leads the discussion or presents ideas": "Auditory",
             "Builds prototypes or does the hands-on tasks": "Kinesthetic"
         }
     },
@@ -79,7 +79,7 @@ questions = [
         "title": "What helps you relax the most?",
         "choices": {
             "Watching calming visuals or nature": "Visual",
-            "Listening to music or podcasts": "Audio",
+            "Listening to music or podcasts": "Auditory",
             "Doing physical activities like stretching": "Kinesthetic"
         }
     },
@@ -87,7 +87,7 @@ questions = [
         "title": "Which type of game do you enjoy the most?",
         "choices": {
             "Puzzle or visual games": "Visual",
-            "Music-based or quiz games": "Audio",
+            "Music-based or quiz games": "Auditory",
             "Movement-based or active games": "Kinesthetic"
         }
     },
@@ -95,7 +95,7 @@ questions = [
         "title": "What is your biggest strength?",
         "choices": {
             "Observing patterns and visuals": "Visual",
-            "Listening and expressing ideas": "Audio",
+            "Listening and expressing ideas": "Auditory",
             "Doing and making things happen": "Kinesthetic"
         }
     },
@@ -103,7 +103,7 @@ questions = [
         "title": "If you have to give a presentation, you'd prefer to:",
         "choices": {
             "Use slides and visual cues": "Visual",
-            "Speak clearly and tell stories": "Audio",
+            "Speak clearly and tell stories": "Auditory",
             "Use props or demonstrations": "Kinesthetic"
         }
     },
@@ -111,7 +111,7 @@ questions = [
         "title": "How do you like to spend your weekend?",
         "choices": {
             "Watching movies or reading": "Visual",
-            "Chatting or listening to music": "Audio",
+            "Chatting or listening to music": "Auditory",
             "Doing physical activities or crafts": "Kinesthetic"
         }
     },
@@ -119,7 +119,7 @@ questions = [
         "title": "When attending a workshop, what do you value most?",
         "choices": {
             "Visual aids and organized charts": "Visual",
-            "Interactive discussion and audio clarity": "Audio",
+            "Interactive discussion and audio clarity": "Auditory",
             "Hands-on practice and physical involvement": "Kinesthetic"
         }
     }
@@ -159,7 +159,7 @@ def render_question_list():
 def calculate_scores():
     scores = {
         "Visual": 0,
-        "Audio": 0,
+        "Auditory": 0,
         "Kinesthetic": 0
     }
 
@@ -186,7 +186,7 @@ def show_result_dialog():
     image_link = ""
     popup_type = ""
     is_all_questions_answered = len(unanswered_questions) == 0
-    is_equal_scores = scores["Visual"] == scores["Audio"] == scores["Kinesthetic"]
+    is_equal_scores = scores["Visual"] == scores["Auditory"] == scores["Kinesthetic"]
     # endregion
 
     # region Render Results Component
@@ -203,7 +203,7 @@ def show_result_dialog():
                 message = "👀 Congratulations, you are a VISUAL learner"
                 description = "**Visual learners** understand best through seeing. They prefer images, diagrams, charts, and written instructions. They retain information more effectively when it's presented visually and often benefit from color-coded notes or mind maps."
                 image_link = "assets/visual.gif"
-            elif learning_style == "Audio":
+            elif learning_style == "Auditory":
                 message = "👂 Congratulations, you are a AUDITORY learner"
                 description = "**Auditory learners** grasp concepts better through listening. They enjoy discussions, lectures, and audio materials, and they often remember information by hearing it or repeating it aloud. Sound and rhythm play a key role in how they process knowledge."
                 image_link = "assets/auditory.gif"
@@ -226,7 +226,7 @@ def show_result_dialog():
     if is_all_questions_answered and not(is_equal_scores):
         with st.expander("🔍 See Detailed Scores"):
             st.markdown(f"Your visual learning score is : **{scores["Visual"]}**")
-            st.markdown(f"Your auditory learning score is : **{scores["Audio"]}**")
+            st.markdown(f"Your auditory learning score is : **{scores["Auditory"]}**")
             st.markdown(f"Your kinesthetic learning score is : **{scores["Kinesthetic"]}**") 
     #endregion
 # endregion
