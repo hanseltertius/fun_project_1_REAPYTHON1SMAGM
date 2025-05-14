@@ -2,19 +2,19 @@
 
 ### Table of Contents
 
-- [fun_project_1_REAPYTHON1SMAGM](#fun_project_1_reapython1smagm)
-  - [Table of Contents](#table-of-contents)
-  - [Project Description](#project-description)
-  - [How to Setup Project](#how-to-setup-project)
-  - [Usage](#usage)
-  - [Features](#features)
-  - [Demo](#demo)
-    - [Starting the App](#starting-the-app)
-    - [Unanswered Questions](#unanswered-questions)
-    - [Equal Value](#equal-value)
-    - [Visual Learning Style](#visual-learning-style)
-    - [Auditory Learning Style](#auditory-learning-style)
-    - [Kinesthetic Learning Style](#kinesthetic-learning-style)
+- [fun\_project\_1\_REAPYTHON1SMAGM](#fun_project_1_reapython1smagm)
+    - [Table of Contents](#table-of-contents)
+    - [Project Description](#project-description)
+    - [How to Setup Project](#how-to-setup-project)
+    - [Usage](#usage)
+    - [Features](#features)
+    - [Demo](#demo)
+      - [Starting the App](#starting-the-app)
+      - [Unanswered Questions](#unanswered-questions)
+      - [Equal Value](#equal-value)
+      - [Visual Learning Style](#visual-learning-style)
+      - [Auditory Learning Style](#auditory-learning-style)
+      - [Kinesthetic Learning Style](#kinesthetic-learning-style)
 
 ### Project Description
 
@@ -66,14 +66,19 @@ In this project the features includes:
 
 #### Starting the App
 
-![Screenshot](screenshots/Select%20Box%20Choices.png) We can select the how many
-questions we displayed ![Screenshot](screenshots/How%20to%20Start%20Quiz.png)
-Click the button "Start Quiz" to start.
+![Screenshot](screenshots/Initial%20State.png)
+
+We can select the how many questions we displayed
+
+![Screenshot](screenshots/How%20to%20Start%20Quiz.png)
+
+Click the button **"Start Quiz"** to start.
 
 #### Unanswered Questions
 
-![Screenshot](screenshots/Unanswered%20Question.png) Click "Calculate Results"
-button
+![Screenshot](screenshots/Unanswered%20Question.png)
+
+Click **"Calculate Results"** button
 
 ![Screenshot](screenshots/Unanswered%20Question%20Result.png)
 
@@ -81,9 +86,9 @@ button
 
 ![Screenshot](screenshots/Equal%20Value%20Answer.png)
 
-- Click "Calculate Results" button
-- This condition happens when score of "Visual", "Auditory" and "Kinesthetic"
-  value are equal to each other
+- Click **"Calculate Results"** button
+- This condition is triggered when two or more learning styles have the same
+  highest score (Visual, Auditory, or Kinesthetic).
 
 ![Screenshot](screenshots/Equal%20Value%20Result.png)
 
@@ -91,8 +96,8 @@ button
 
 ![Screenshot](screenshots/Visual%20Answer.png)
 
-- Click "Calculate Results" button
-- This condition happens when score of "Visual" (the first choice) is more
+- Click **"Calculate Results"** button
+- This condition happens when score of **"Visual"** (the first choice) is more
   dominant than the other
 
 ![Screenshot](screenshots/Visual%20Result.png)
@@ -101,9 +106,9 @@ button
 
 ![Screenshot](screenshots/Auditory%20Answer.png)
 
-- Click "Calculate Results" button
-- This condition happens when score of "Auditory" (the second choice) is more
-  dominant than the other
+- Click **"Calculate Results"** button
+- This condition happens when score of **"Auditory"** (the second choice) is
+  more dominant than the other
 
 ![Screenshot](screenshots/Auditory%20Result.png)
 
@@ -111,8 +116,8 @@ button
 
 ![Screenshot](screenshots/Kinesthetic%20Answer.png)
 
-- Click "Calculate Results" button
-- This condition happens when score of "Kinesthetic" (the third choice) is more
-  dominant than the other
+- Click **"Calculate Results"** button
+- This condition happens when score of **"Kinesthetic"** (the third choice) is
+  more dominant than the other
 
 ![Screenshot](screenshots/Kinesthetic%20Result.png)
