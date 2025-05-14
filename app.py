@@ -235,7 +235,7 @@ def show_result_dialog():
 
 # region Content
 st.header("📚 Learning Style Test")
-selected_options = st.selectbox("Please select how many questions to display", question_options, on_change=on_option_change)
+selected_option = st.segmented_control("Please select how many questions to display", question_options, on_change=on_option_change, selection_mode="single")
 
 if "quiz_started" not in st.session_state:
     initialize_quiz_state()
@@ -243,9 +243,10 @@ if "quiz_started" not in st.session_state:
 if "open_result_dialog" not in st.session_state:
     initialize_dialog_state()
 
-if st.button("Start Quiz"):
-    st.session_state.quiz_started = True
-    st.session_state.filtered_questions = random.sample(questions, selected_options)
+if selected_option != None:
+    if st.button("Start Quiz"):
+        st.session_state.quiz_started = True
+        st.session_state.filtered_questions = random.sample(questions, selected_option)
 
 if st.session_state.quiz_started:
     render_question_list()
