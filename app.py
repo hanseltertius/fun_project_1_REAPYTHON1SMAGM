@@ -156,6 +156,10 @@ def render_question_list():
         question_title = f"{question_number}.{question['title']}"
         st.radio(question_title, question["choices"], index=None, key=question_number_key)
 
+def render_scores(scores):
+    for key, value in scores.items():
+        st.markdown(f"Your {key.lower()} learning score is : **{value}**")
+
 def calculate_scores():
     scores = {
         "Visual": 0,
@@ -186,24 +190,24 @@ def show_result_dialog():
     image_link = ""
     popup_type = ""
     is_all_questions_answered = len(unanswered_questions) == 0
-    is_equal_scores = scores["Visual"] == scores["Auditory"] == scores["Kinesthetic"]
+    dominant_learning_style = max(scores.values())
+    dominant_learning_style_list = list(scores.values()).count(dominant_learning_style)
+    is_multiple_learning_styles = dominant_learning_style_list >= 2
     # endregion
 
     # region Render Results Component
     if is_all_questions_answered:
-        if is_equal_scores:
+        if is_multiple_learning_styles:
             message = "⚠️ There is no suitable learning style, please try again"
-            description = "This application requires one learning style to have the highest score. If Visual, Audio, and Kinesthetic scores are all equal, we cannot determine a dominant learning preference. Please try again and answer more reflectively."
+            description = "This application requires one learning style to have the highest score. If Visual, Audio, and Kinesthetic scores are all equal or 2 of the learning styles have equal value, we cannot determine a dominant learning preference. Please try again and answer more reflectively."
             image_link = "assets/try-again.gif"
             popup_type = "Warning"
         else:
-            learning_style = max(scores, key=scores.get)
-
-            if learning_style == "Visual":
+            if dominant_learning_style == "Visual":
                 message = "👀 Congratulations, you are a VISUAL learner"
                 description = "**Visual learners** understand best through seeing. They prefer images, diagrams, charts, and written instructions. They retain information more effectively when it's presented visually and often benefit from color-coded notes or mind maps."
                 image_link = "assets/visual.gif"
-            elif learning_style == "Auditory":
+            elif dominant_learning_style == "Auditory":
                 message = "👂 Congratulations, you are a AUDITORY learner"
                 description = "**Auditory learners** grasp concepts better through listening. They enjoy discussions, lectures, and audio materials, and they often remember information by hearing it or repeating it aloud. Sound and rhythm play a key role in how they process knowledge."
                 image_link = "assets/auditory.gif"
@@ -223,11 +227,9 @@ def show_result_dialog():
     #endregion
 
     # region Detailed Scores
-    if is_all_questions_answered and not(is_equal_scores):
+    if is_all_questions_answered:
         with st.expander("🔍 See Detailed Scores"):
-            st.markdown(f"Your visual learning score is : **{scores["Visual"]}**")
-            st.markdown(f"Your auditory learning score is : **{scores["Auditory"]}**")
-            st.markdown(f"Your kinesthetic learning score is : **{scores["Kinesthetic"]}**") 
+            render_scores(scores)
     #endregion
 # endregion
 
