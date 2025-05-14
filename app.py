@@ -146,9 +146,6 @@ def initialize_quiz_state():
     st.session_state.quiz_started = False
     st.session_state.filtered_questions = []
 
-def initialize_dialog_state():
-    st.session_state.open_dialog = False
-
 def render_question_list():
     for index, question in enumerate(st.session_state.filtered_questions):
         question_number = index + 1
@@ -240,10 +237,10 @@ selected_option = st.segmented_control("Please select how many questions to disp
 if "quiz_started" not in st.session_state:
     initialize_quiz_state()
 
-if "open_result_dialog" not in st.session_state:
-    initialize_dialog_state()
+if "open_dialog" not in st.session_state:
+    st.session_state.open_dialog = False
 
-if selected_option != None:
+if selected_option is not None:
     if st.button("Start Quiz"):
         st.session_state.quiz_started = True
         st.session_state.filtered_questions = random.sample(questions, selected_option)
