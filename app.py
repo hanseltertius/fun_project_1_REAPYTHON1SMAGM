@@ -187,9 +187,8 @@ def show_result_dialog():
     image_link = ""
     popup_type = ""
     is_all_questions_answered = len(unanswered_questions) == 0
-    dominant_learning_style = max(scores.values())
-    dominant_learning_style_list = list(scores.values()).count(dominant_learning_style)
-    is_multiple_learning_styles = dominant_learning_style_list >= 2
+    dominant_learning_styles_count = list(scores.values()).count(max(scores.values()))
+    is_multiple_learning_styles = dominant_learning_styles_count >= 2
     # endregion
 
     # region Render Results Component
@@ -200,6 +199,7 @@ def show_result_dialog():
             image_link = "assets/try-again.gif"
             popup_type = "Warning"
         else:
+            dominant_learning_style = max(scores, key=scores.get)
             if dominant_learning_style == "Visual":
                 message = "👀 Congratulations, you are a VISUAL learner"
                 description = "**Visual learners** understand best through seeing. They prefer images, diagrams, charts, and written instructions. They retain information more effectively when it's presented visually and often benefit from color-coded notes or mind maps."
@@ -237,9 +237,6 @@ selected_option = st.segmented_control("Please select how many questions to disp
 if "quiz_started" not in st.session_state:
     initialize_quiz_state()
 
-if "open_dialog" not in st.session_state:
-    st.session_state.open_dialog = False
-
 if selected_option is not None:
     if st.button("Start Quiz"):
         st.session_state.quiz_started = True
@@ -249,8 +246,5 @@ if st.session_state.quiz_started:
     render_question_list()
 
     if st.button("Calculate Results"):
-        st.session_state.open_dialog = True
-
-if st.session_state.open_dialog == True:
-    show_result_dialog()
+        show_result_dialog()
 # endregion
